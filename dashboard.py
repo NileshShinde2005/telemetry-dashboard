@@ -7,6 +7,20 @@ from datetime import datetime
 
 st.set_page_config(page_title="🛰️ Aerospace Telemetry", layout="wide")
 
+# ---------- CUSTOM STYLE ----------
+st.markdown("""
+<style>
+.block-container {
+    padding-top: 2rem;
+}
+[data-testid="metric-container"] {
+    background-color: rgba(255,255,255,0.05);
+    padding: 12px;
+    border-radius: 12px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ---------- TITLE ----------
 st.title("🛰️ Aerospace Telemetry Dashboard")
 st.caption("Real-time telemetry simulation (Cloud Version)")
@@ -39,35 +53,39 @@ st.markdown("### 🔍 Real-time Readings")
 
 col1, col2, col3 = st.columns(3)
 
-# calculate delta
 delta_alt = altitude - df["Altitude"].iloc[-2] if len(df) > 1 else 0
 delta_speed = speed - df["Speed"].iloc[-2] if len(df) > 1 else 0
 delta_temp = temperature - df["Temperature"].iloc[-2] if len(df) > 1 else 0
 
-col1.metric("📡 Altitude (ft)", altitude, delta_alt)
-col2.metric("🚀 Speed (km/h)", speed, delta_speed)
-col3.metric("🌡️ Temperature (°C)", temperature, delta_temp)
+col1.metric("📡 Altitude", f"{altitude} ft", delta_alt)
+col2.metric("🚀 Speed", f"{speed} km/h", delta_speed)
+col3.metric("🌡️ Temperature", f"{temperature} °C", delta_temp)
 
 st.divider()
 
 # ---------- GRAPHS ----------
-st.markdown("### 📈 Graphs (Last 30 Readings)")
+st.markdown("### 📈 Telemetry Trends")
 
 chart_df = df.tail(30)
 
-st.subheader("📡 Altitude")
-st.line_chart(chart_df["Altitude"])
+col1, col2 = st.columns(2)
 
-st.subheader("🚀 Speed")
-st.line_chart(chart_df["Speed"])
+with col1:
+    st.subheader("Altitude")
+    st.line_chart(chart_df["Altitude"])
 
-st.subheader("🌡️ Temperature")
-st.line_chart(chart_df["Temperature"])
+    st.subheader("Temperature")
+    st.line_chart(chart_df["Temperature"])
+
+with col2:
+    st.subheader("Speed")
+    st.line_chart(chart_df["Speed"])
 
 st.divider()
 
 # ---------- IMAGE SECTION ----------
-st.markdown("### 📷 Latest Captured Images")
+st.markdown("### 📷 Satellite Camera Feed")
+st.caption("Simulated onboard camera captures")
 
 image_folder = "sample_images"
 os.makedirs(image_folder, exist_ok=True)
