@@ -4,6 +4,7 @@ import random
 import time
 import os
 from datetime import datetime
+import plotly.express as px
 
 st.set_page_config(page_title="🛰️ Aerospace Telemetry", layout="wide")
 
@@ -24,6 +25,7 @@ st.markdown("""
 # ---------- TITLE ----------
 st.title("🛰️ Aerospace Telemetry Dashboard")
 st.caption("Real-time telemetry simulation (Cloud Version)")
+st.info("Simulated telemetry system demonstrating satellite-to-ground data monitoring and visualization.")
 
 st.divider()
 
@@ -72,14 +74,17 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Altitude")
-    st.line_chart(chart_df["Altitude"])
+    fig1 = px.line(chart_df, y="Altitude", title="Altitude Trend", template="plotly_dark")
+    st.plotly_chart(fig1, use_container_width=True)
 
     st.subheader("Temperature")
-    st.line_chart(chart_df["Temperature"])
+    fig2 = px.line(chart_df, y="Temperature", title="Temperature Trend", template="plotly_dark")
+    st.plotly_chart(fig2, use_container_width=True)
 
 with col2:
     st.subheader("Speed")
-    st.line_chart(chart_df["Speed"])
+    fig3 = px.line(chart_df, y="Speed", title="Speed Trend", template="plotly_dark")
+    st.plotly_chart(fig3, use_container_width=True)
 
 st.divider()
 
@@ -105,9 +110,9 @@ images = sorted(os.listdir(image_folder), reverse=True)[:2]
 
 if images:
     col1, col2 = st.columns(2)
-    col1.image(os.path.join(image_folder, images[0]), use_column_width=True)
+    col1.image(os.path.join(image_folder, images[0]), use_container_width=True)
     if len(images) > 1:
-        col2.image(os.path.join(image_folder, images[1]), use_column_width=True)
+        col2.image(os.path.join(image_folder, images[1]), use_container_width=True)
 
 # ---------- AUTO REFRESH ----------
 time.sleep(1)
